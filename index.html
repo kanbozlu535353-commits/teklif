@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sude için Özel Bir Soru...</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a0b1c 0%, #4a0e2e 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            height: 60px;
+        }
+
+        button {
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #btn-yes {
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            color: #1a0b1c;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+            z-index: 2;
+        }
+
+        #btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        #btn-no {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: absolute;
+            left: 55%;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #ff3366;
+            animation: floatUp 4s ease-in infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+        }
+
+        #celebration {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #celebration h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ff3366;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Yüzen Kalpler Arka Planı -->
+    <div id="hearts-container"></div>
+
+    <div class="container" id="main-card">
+        <h1>Sude...</h1>
+        <p>Seninle geçen her an çok özel. Hayatıma kattığın güzellikler için teşekkür ederim. <br><br>Benimle çıkar mısın?</p>
+        
+        <div class="buttons">
+            <button id="btn-yes">Evet!</button>
+            <button id="btn-no">Hayır</button>
+        </div>
+    </div>
+
+    <!-- Kutlama Ekranı -->
+    <div id="celebration">
+        <h2>Biliyordum! Seni Seviyorum ❤️</h2>
+    </div>
+
+    <!-- Confetti Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const btnNo = document.getElementById('btn-no');
+        const btnYes = document.getElementById('btn-yes');
+        const celebration = document.getElementById('celebration');
+        const mainCard = document.getElementById('main-card');
+
+        // "Hayır" butonundan kaçma efekti
+        btnNo.addEventListener('mouseover', () => {
+            const containerRect = document.querySelector('.container').getBoundingClientRect();
+            
+            // Rastgele X ve Y koordinatları (butonun kart içinde kalmasını veya biraz dışına taşmasını sağlar)
+            const randomX = Math.floor(Math.random() * 300) - 150;
+            const randomY = Math.floor(Math.random() * 200) - 100;
+
+            btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            // "Evet" butonunu yavaşça büyüt
+            let currentScale = parseFloat(btnYes.style.transform.replace('scale(', '').replace(')', '')) || 1;
+            btnYes.style.transform = `scale(${currentScale + 0.1})`;
+        });
+
+        // "Evet" butonuna tıklandığında
+        btnYes.addEventListener('click', () => {
+            mainCard.style.display = 'none';
+            celebration.style.display = 'flex';
+            
+            // Konfeti efekti
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff3366', '#ffd700', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff3366', '#ffd700', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        });
+
+        // Arka plana yüzen kalpler ekleme
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            for(let i=0; i<15; i++) {
+                let heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+    </script>
+</body>
+</html>
